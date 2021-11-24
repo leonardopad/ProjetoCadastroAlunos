@@ -23,7 +23,7 @@ struct Aluno {
 * retorna o char digitada pelo usuário
 */
 char menu ();
-Aluno alunos[50];
+Aluno alunos[100];
 
 /**
 * Esta função é chamada para permitir 

@@ -4,7 +4,7 @@ int main () {
 	char opcao = ' ';
 	int QTSALUNOS = 1;
 	char continuar = ' ';
-	Aluno aluno[50];
+	Aluno aluno[100];
 	do {
 	   opcao = menu();	
 	   switch (opcao) {
@@ -14,7 +14,7 @@ int main () {
 				    std:: cout << "Deseja continuar?\nDigite S para sim e N para nao!\n";
 					std:: cin >> continuar;
 					if(continuar == 'S'){
-						QTSALUNOS + 1;
+						QTSALUNOS++;
 					}else if(continuar == 'N'){
 						break;
 					}else{

@@ -24,7 +24,7 @@ bool criaArquivoDP1 (Aluno aluno){
 	arquivo4 << aluno.nome << ";"
 			<< aluno.matricula << ";"
 			<< aluno.aep1 << ";"
-			<< aluno.prova1 << ";";
+			<< aluno.prova1 << "\n";
 			arquivo4.close();
 			return true;
 	
@@ -41,7 +41,7 @@ bool criaArquivoDP2 (Aluno aluno){
 	arquivo5 << aluno.nome << ";"
 			<< aluno.matricula << ";"
 			<< aluno.aep2 << ";"
-			<< aluno.prova2 << ";";
+			<< aluno.prova2 << "\n";
 			arquivo5.close();
 			return true;
 	
@@ -108,9 +108,10 @@ bool cadastraAluno (Aluno aluno) {
 }
 
 void perguntaAluno(Aluno aluno){
+	std:: cin.get();//limpar o buffer
 	std:: cout << "Digite o nome do aluno: \n";
 //	std::getline (std::cin, aluno.nome);
-	std:: cin >> aluno.nome;
+	std:: getline(std::cin, aluno.nome);
 	std:: cout << "Digite a matricula do aluno: \n";
 	std:: cin >> aluno.matricula;
 	std:: cout << "Digite a aep do aluno: \n";
@@ -130,14 +131,15 @@ void perguntaAluno(Aluno aluno){
 		aluno.status = "Aprovado";
 	}
 	if(aluno.media < 6){
-		if ((aluno.prova1 + aluno.aep1) >= (aluno.prova2 + aluno.aep2)){
-			criaArquivoDP1(aluno);
+		if ((aluno.prova1 + aluno.aep1) > (aluno.prova2 + aluno.aep2)){
+			criaArquivoDP2(aluno);
 			aluno.media =((aluno.aep1 + aluno.prova1)/2) + ((aluno.sub + aluno.prova2)/2);
 		}else if((aluno.prova2 + aluno.aep2) > (aluno.prova1 + aluno.aep1)){
 			aluno.media = ((aluno.sub + aluno.prova1)/2) + ((aluno.aep2 + aluno.prova2)/2);
-			criaArquivoDP2(aluno);
+			criaArquivoDP1(aluno);
 		}else if((aluno.prova1 + aluno.aep1)  == (aluno.prova2 + aluno.aep2)){
-			aluno.media =((aluno.aep1 + aluno.prova1)/2) + ((aluno.sub + aluno.prova2)/2);
+			aluno.media =((aluno.aep1 + aluno.sub)/2) + ((aluno.sub + aluno.prova2)/2);
+			criaArquivoDP1(aluno);
 		}
 	if(aluno.media >= 6){
 		aluno.status = "Aprovado";
