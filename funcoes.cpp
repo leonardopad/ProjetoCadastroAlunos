@@ -12,6 +12,42 @@ char menu () {
 	system("cls");
 	return escolha;
 }
+bool criaArquivoDP1 (Aluno aluno){
+	std::ofstream arquivo4;
+	arquivo4.open("DepedenciaSegundoSemestre.csv", std::fstream::app);
+	
+	if(!arquivo4.is_open()){
+		std:: cout << "Houve um erro ao abrir o arquivo de criacao da tabela de aprovados";
+		return false;
+	}
+	
+	arquivo4 << aluno.nome << ";"
+			<< aluno.matricula << ";"
+			<< aluno.aep1 << ";"
+			<< aluno.prova1 << ";";
+			arquivo4.close();
+			return true;
+	
+}
+bool criaArquivoDP2 (Aluno aluno){
+	std::ofstream arquivo5;
+	arquivo5.open("DepedenciaPrimeiroSemestre.csv", std::fstream::app);
+	
+	if(!arquivo5.is_open()){
+		std:: cout << "Houve um erro ao abrir o arquivo de criacao da tabela de aprovados";
+		return false;
+	}
+	
+	arquivo5 << aluno.nome << ";"
+			<< aluno.matricula << ";"
+			<< aluno.aep2 << ";"
+			<< aluno.prova2 << ";";
+			arquivo5.close();
+			return true;
+	
+}
+
+
 
 bool criaArquivoAprovados (Aluno aluno){
 	std::ofstream arquivo2;
@@ -95,9 +131,11 @@ void perguntaAluno(Aluno aluno){
 	}
 	if(aluno.media < 6){
 		if ((aluno.prova1 + aluno.aep1) >= (aluno.prova2 + aluno.aep2)){
+			criaArquivoDP1(aluno);
 			aluno.media =((aluno.aep1 + aluno.prova1)/2) + ((aluno.sub + aluno.prova2)/2);
 		}else if((aluno.prova2 + aluno.aep2) > (aluno.prova1 + aluno.aep1)){
 			aluno.media = ((aluno.sub + aluno.prova1)/2) + ((aluno.aep2 + aluno.prova2)/2);
+			criaArquivoDP2(aluno);
 		}else if((aluno.prova1 + aluno.aep1)  == (aluno.prova2 + aluno.aep2)){
 			aluno.media =((aluno.aep1 + aluno.prova1)/2) + ((aluno.sub + aluno.prova2)/2);
 		}
