@@ -2,7 +2,7 @@
 
 int main () {
 	char opcao = ' ';
-	int QTSALUNOS = 1;
+	int QTSALUNOS = 0;
 	char continuar = ' ';
 	Aluno aluno[50];
 	do {

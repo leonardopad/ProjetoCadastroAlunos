@@ -37,7 +37,8 @@ bool cadastraAluno (Aluno aluno) {
 
 void perguntaAluno(Aluno aluno){
 	std:: cout << "Digite o nome do aluno: \n";
-	std::cin >> aluno.nome;
+//	std::getline (std::cin, aluno.nome);
+	std:: cin >> aluno.nome;
 	std:: cout << "Digite a matricula do aluno: \n";
 	std:: cin >> aluno.matricula;
 	std:: cout << "Digite a aep do aluno: \n";
@@ -56,13 +57,18 @@ void perguntaAluno(Aluno aluno){
 		aluno.sub = 0;
 	}
 	if(aluno.media < 6){
-		if (aluno.prova1 >= aluno.prova2){
+		if ((aluno.prova1 + aluno.aep1) >= (aluno.prova2 + aluno.aep2)){
 			aluno.media =((aluno.aep1 + aluno.prova1)/2) + ((aluno.sub + aluno.prova2)/2);
-		}else if(aluno.prova2 > aluno.prova2){
+		}else if((aluno.prova2 + aluno.aep2) > (aluno.prova1 + aluno.aep1)){
 			aluno.media = ((aluno.sub + aluno.prova1)/2) + ((aluno.aep2 + aluno.prova2)/2);
-		}else if(aluno.prova1 == aluno.prova2){
+		}else if((aluno.prova1 + aluno.aep1)  == (aluno.prova2 + aluno.aep2)){
 			aluno.media =((aluno.aep1 + aluno.prova1)/2) + ((aluno.sub + aluno.prova2)/2);
 		}
+	if(aluno.media >= 6){
+		aluno.status = "Aprovado";
+	}else {
+		aluno.status = "Em dependecia";
+	}
 	}
 	//Cria o Arquivo
 	if (cadastraAluno(aluno)){
@@ -80,10 +86,11 @@ bool realizaLeitura(){
 		}
 		std:: string linha;
 		int indexAlunos = 0;
-		while(std::getline(arquivo, linha)){
+		while (std::getline(arquivo, linha)){
 			int coluna = 0;
 			int controleColuna = 0;
 			std:: string conteudoLinha = "";
+			float conteudoFloat = 0;
 			
 			for(int i = 0; i <= linha.size(); i++){
 				if(coluna == 1 && controleColuna == 0) {
@@ -91,9 +98,13 @@ bool realizaLeitura(){
 					conteudoLinha = "";
 					controleColuna = 1;
 				}
-				else if(coluna == 2 && controleColuna = 1){
+				else if(coluna == 2 && controleColuna == 1){
 					alunos[indexAlunos].matricula = conteudoLinha;
 					controleColuna = 2;
+				}
+				else if(coluna == 3 && controleColuna == 2){
+					alunos[indexAlunos].aep1 = conteudoFloat;
+					controleColuna = 3;
 				}
 				if(linha[i] == ';'){
 					coluna++;
@@ -103,12 +114,13 @@ bool realizaLeitura(){
 			}
 			indexAlunos++;
 		}
-		arquivo.close;
+		arquivo.close();
 	//tentativa1	
 	for (int i = 0; i < 100; i++) {
-	std::cout << "Aluno n " << i+1 << "\n";
+	std::cout << "Aluno n-" << i+1 << "\n";
 	std::cout << "Nome: " << alunos[i].nome << "\n";
 	std::cout << "Matricula: " << alunos[i].matricula << "\n";
+	std:: cout << "AEP1: " << alunos[i].aep1 << "\n";
 	}	
 	return true;
 }
