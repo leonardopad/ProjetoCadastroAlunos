@@ -2,19 +2,16 @@
 
 int main () {
 	char opcao = ' ';
-	int QTSALUNOS = 0;
+	int QTSALUNOS = 1;
 	char continuar = ' ';
 	Aluno aluno[50];
 	do {
 	   opcao = menu();	
 	   switch (opcao) {
-//	   		case 'T':
-//	   			teste();
-//	   		break;
 	   		case 'C':
 	   			for(int i = 0; i <= QTSALUNOS; i++){
 	   					perguntaAluno(aluno[i]);
-				    std:: cout << "Deseja continuar?/nDigite S para sim e N para nao!\n";
+				    std:: cout << "Deseja continuar?\nDigite S para sim e N para nao!\n";
 					std:: cin >> continuar;
 					if(continuar == 'S'){
 						QTSALUNOS + 1;
@@ -31,6 +28,9 @@ int main () {
 	   		case 'L':
 	   			realizaLeitura();
 	   			break;
+//	   		case 'A':
+//			   criaArquivoAprovados(Aluno aluno[i]);
+//			   break;	
 	   		// demais funcoes deverão ser chamadas aqui
 	   		default:
 	   			std::cout << "Opcao invalida\n Tente Novamente!\n";

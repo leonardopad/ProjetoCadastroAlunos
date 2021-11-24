@@ -5,11 +5,47 @@ char menu () {
 	std::cout << "\n==SELECIONE UMA OPCAO ABAIXO==";
 	std::cout << "\n=========DIGITE A LETRA=======";
 	std::cout << "\n========== C - Cadastra Aluno===========";
-	std::cout << "\n========== L - Ler o Arquivo de Alunos===========";
+	std::cout << "\n========== L - Ler o Arquivo de Alunos Aprovados===========";
+	std::cout << "\n========== A - Criar arquivo com alunos aprovados===========";
 	std::cout << "\n==========F - FINALIZA========\n";
 	std::cin >> escolha;
 	system("cls");
 	return escolha;
+}
+
+bool criaArquivoAprovados (Aluno aluno){
+	std::ofstream arquivo2;
+	arquivo2.open("Aprovados.csv", std::fstream::app);
+	
+	if(!arquivo2.is_open()){
+		std:: cout << "Houve um erro ao abrir o arquivo de criacao da tabela de aprovados";
+		return false;
+	}
+	
+	arquivo2 << aluno.nome << ";"
+			<< aluno.matricula << ";"
+			<< aluno.media << ";"
+			<< aluno.status << "\n";
+			arquivo2.close();
+			return true;
+	
+}
+
+bool criaArquivoDependencia (Aluno aluno){
+	std::ofstream arquivo3;
+	arquivo3.open("Dependencia.csv", std::fstream::app);
+	
+	if(!arquivo3.is_open()){
+		std:: cout << "Houve um erro ao abrir o arquivo de criacao da tabela de aprovados";
+		return false;
+	}
+	
+	arquivo3 << aluno.nome << ";"
+			<< aluno.matricula << ";"
+			<< aluno.media << ";"
+			<< aluno.status << "\n";
+			arquivo3.close();
+			return true;
 }
 
 bool cadastraAluno (Aluno aluno) {
@@ -55,6 +91,7 @@ void perguntaAluno(Aluno aluno){
 		std:: cin >> aluno.sub;
 	}else if(aluno.media >= 6){
 		aluno.sub = 0;
+		aluno.status = "Aprovado";
 	}
 	if(aluno.media < 6){
 		if ((aluno.prova1 + aluno.aep1) >= (aluno.prova2 + aluno.aep2)){
@@ -70,6 +107,12 @@ void perguntaAluno(Aluno aluno){
 		aluno.status = "Em dependecia";
 	}
 	}
+	if(aluno.media >=6){
+		criaArquivoAprovados(aluno);	
+	}else if (aluno.media < 6) {
+		criaArquivoDependencia(aluno);
+	}
+	
 	//Cria o Arquivo
 	if (cadastraAluno(aluno)){
 		std::cout << "Aluno cadastrado\n";
@@ -90,7 +133,6 @@ bool realizaLeitura(){
 			int coluna = 0;
 			int controleColuna = 0;
 			std:: string conteudoLinha = "";
-			float conteudoFloat = 0;
 			
 			for(int i = 0; i <= linha.size(); i++){
 				if(coluna == 1 && controleColuna == 0) {
@@ -102,15 +144,15 @@ bool realizaLeitura(){
 					alunos[indexAlunos].matricula = conteudoLinha;
 					controleColuna = 2;
 				}
-				else if(coluna == 3 && controleColuna == 2){
-					alunos[indexAlunos].aep1 = conteudoFloat;
-					controleColuna = 3;
-				}
+//				else if(coluna == 3 && controleColuna == 2){
+//					alunos[indexAlunos].aep1 = conteudoLinha;
+//					controleColuna = 3;
+//				}
 				if(linha[i] == ';'){
 					coluna++;
 					continue;
 				}
-				conteudoLinha.push_back(linha[i]);
+				
 			}
 			indexAlunos++;
 		}

@@ -36,3 +36,5 @@ bool cadastraAluno (Aluno);
 void perguntaAluno(Aluno);
 /* nessa funcao se espera true or false na leitura do arquivo*/
 bool realizaLeitura();
+//Funcao que cria lista de aprovados
+bool criaArquivoAprovados();
