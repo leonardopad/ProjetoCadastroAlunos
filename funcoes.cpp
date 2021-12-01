@@ -1,12 +1,14 @@
 #include "funcoes.h"
 
-char menu () {	
+char menu () {
 	char escolha = ' ';
 	std::cout << "\n==SELECIONE UMA OPCAO ABAIXO==";
 	std::cout << "\n=========DIGITE A LETRA=======";
 	std::cout << "\n========== C - Cadastra Aluno===========";
 	std::cout << "\n========== L - Ler o Arquivo de Alunos Aprovados===========";
-	std::cout << "\n========== A - Criar arquivo com alunos aprovados===========";
+	std::cout << "\n========== D - Ler o Arquivo de Alunos Em Dependencia===========";
+	std::cout << "\n========== S - Ler o Arquivo em Sub no primeiro Bimestre===========";
+	std::cout << "\n========== J - Ler o Arquivo em Sub no Segundo Bimestre===========";
 	std::cout << "\n==========F - FINALIZA========\n";
 	std::cin >> escolha;
 	system("cls");
@@ -15,36 +17,36 @@ char menu () {
 bool criaArquivoDP1 (Aluno aluno){
 	std::ofstream arquivo4;
 	arquivo4.open("DepedenciaSegundoSemestre.csv", std::fstream::app);
-	
+
 	if(!arquivo4.is_open()){
 		std:: cout << "Houve um erro ao abrir o arquivo de criacao da tabela de aprovados";
 		return false;
 	}
-	
+
 	arquivo4 << aluno.nome << ";"
 			<< aluno.matricula << ";"
 			<< aluno.aep1 << ";"
 			<< aluno.prova1 << "\n";
 			arquivo4.close();
 			return true;
-	
+
 }
 bool criaArquivoDP2 (Aluno aluno){
 	std::ofstream arquivo5;
 	arquivo5.open("DepedenciaPrimeiroSemestre.csv", std::fstream::app);
-	
+
 	if(!arquivo5.is_open()){
 		std:: cout << "Houve um erro ao abrir o arquivo de criacao da tabela de aprovados";
 		return false;
 	}
-	
+
 	arquivo5 << aluno.nome << ";"
 			<< aluno.matricula << ";"
 			<< aluno.aep2 << ";"
 			<< aluno.prova2 << "\n";
 			arquivo5.close();
 			return true;
-	
+
 }
 
 
@@ -52,30 +54,30 @@ bool criaArquivoDP2 (Aluno aluno){
 bool criaArquivoAprovados (Aluno aluno){
 	std::ofstream arquivo2;
 	arquivo2.open("Aprovados.csv", std::fstream::app);
-	
+
 	if(!arquivo2.is_open()){
 		std:: cout << "Houve um erro ao abrir o arquivo de criacao da tabela de aprovados";
 		return false;
 	}
-	
+
 	arquivo2 << aluno.nome << ";"
 			<< aluno.matricula << ";"
 			<< aluno.media << ";"
-			<< aluno.status << "\n";
+			<< aluno.status << ";\n";
 			arquivo2.close();
 			return true;
-	
+
 }
 
 bool criaArquivoDependencia (Aluno aluno){
 	std::ofstream arquivo3;
 	arquivo3.open("Dependencia.csv", std::fstream::app);
-	
+
 	if(!arquivo3.is_open()){
 		std:: cout << "Houve um erro ao abrir o arquivo de criacao da tabela de aprovados";
 		return false;
 	}
-	
+
 	arquivo3 << aluno.nome << ";"
 			<< aluno.matricula << ";"
 			<< aluno.media << ";"
@@ -87,13 +89,13 @@ bool criaArquivoDependencia (Aluno aluno){
 bool cadastraAluno (Aluno aluno) {
 	std::ofstream arquivo;
 	arquivo.open("database.csv", std::fstream::app);
-	
+
 	if (!arquivo.is_open()) {
 		std::cout << "Houve um erro ao abrir o arquivo!\n";
-		return false;	
+		return false;
 	}
-	
-	arquivo << aluno.nome << ";" 
+
+	arquivo << aluno.nome << ";"
 			<< aluno.matricula << ";"
 			<< aluno.aep1 << ";"
 			<< aluno.prova1 << ";"
@@ -101,8 +103,8 @@ bool cadastraAluno (Aluno aluno) {
 			<< aluno.prova2 << ";"
 			<< aluno.sub << ";"
 			<< aluno.media << ";"
-			<< aluno.status << "\n";
-	
+			<< aluno.status << ";\n";
+
 	arquivo.close();
 	return true;
 }
@@ -133,80 +135,189 @@ void perguntaAluno(Aluno aluno){
 	if(aluno.media < 6){
 		if ((aluno.prova1 + aluno.aep1) > (aluno.prova2 + aluno.aep2)){
 			criaArquivoDP2(aluno);
+			if(aluno.sub >= aluno.prova2){
 			aluno.media =((aluno.aep1 + aluno.prova1)/2) + ((aluno.sub + aluno.prova2)/2);
+			}
 		}else if((aluno.prova2 + aluno.aep2) > (aluno.prova1 + aluno.aep1)){
+		    criaArquivoDP1(aluno);
+		    if(aluno.sub >= aluno.prova1){
 			aluno.media = ((aluno.sub + aluno.prova1)/2) + ((aluno.aep2 + aluno.prova2)/2);
-			criaArquivoDP1(aluno);
+		    }
 		}else if((aluno.prova1 + aluno.aep1)  == (aluno.prova2 + aluno.aep2)){
 			aluno.media =((aluno.aep1 + aluno.sub)/2) + ((aluno.sub + aluno.prova2)/2);
 			criaArquivoDP1(aluno);
 		}
+	}
 	if(aluno.media >= 6){
 		aluno.status = "Aprovado";
-	}else {
+		criaArquivoAprovados(aluno);
+	}else if(aluno.media < 6) {
 		aluno.status = "Em dependecia";
-	}
-	}
-	if(aluno.media >=6){
-		criaArquivoAprovados(aluno);	
-	}else if (aluno.media < 6) {
 		criaArquivoDependencia(aluno);
 	}
-	
+
 	//Cria o Arquivo
 	if (cadastraAluno(aluno)){
 		std::cout << "Aluno cadastrado\n";
 	} else {
-		std::cout << "Erro ao cadastrar aluno teste\n";
+		std::cout << "Erro ao cadastrar aluno\n";
 	}
 }
-bool realizaLeitura(){
-		std::ifstream arquivo;
-		arquivo.open("database.csv");
-		if(!arquivo.is_open()){
-			std:: cout << "Falha ao abrir o arquivo!\n";
-			return false;
-		}
-		std:: string linha;
-		int indexAlunos = 0;
-		while (std::getline(arquivo, linha)){
-			int coluna = 0;
-			int controleColuna = 0;
-			std:: string conteudoLinha = "";
-			
-			for(int i = 0; i <= linha.size(); i++){
-				if(coluna == 1 && controleColuna == 0) {
-					alunos[indexAlunos].nome = conteudoLinha;
-					conteudoLinha = "";
-					controleColuna = 1;
-				}
-				else if(coluna == 2 && controleColuna == 1){
-					alunos[indexAlunos].matricula = conteudoLinha;
-					controleColuna = 2;
-				}
-//				else if(coluna == 3 && controleColuna == 2){
-//					alunos[indexAlunos].aep1 = conteudoLinha;
-//					controleColuna = 3;
-//				}
-				if(linha[i] == ';'){
-					coluna++;
-					continue;
-				}
-				
+
+bool realizaLeitura () {
+	std::ifstream arquivo;
+	arquivo.open("database.csv");
+
+	if (!arquivo.is_open()) {
+		std::cout << "Houve um erro ao abrir o arquivo!";
+		return false;
+	}
+
+	std::string linha;
+	int indexAluno = 0;
+	while (std::getline(arquivo, linha)) {
+		int coluna = 0;
+		int controleColuna = 0;
+		std::string conteudo = "";
+		for (int i = 0; i < linha.size(); i++) {
+			if (coluna == 1 && controleColuna == 0)  {
+				alunos[indexAluno].nome = conteudo;
+				conteudo = "";
+				controleColuna = 1;
+			} else if (coluna == 2 && controleColuna == 1) {
+				alunos[indexAluno].matricula = conteudo;
+				conteudo = "";
+				controleColuna = 2;
+			} else if (coluna == 3 && controleColuna == 2) {
+				alunos[indexAluno].aep1 = std::stof(conteudo);
+				conteudo = "";
+				controleColuna = 3;
+			} else if (coluna == 4 && controleColuna == 3) {
+				alunos[indexAluno].prova1 = std::stof(conteudo);
+				conteudo = "";
+				controleColuna = 4;
+			} else if (coluna == 5 && controleColuna == 4) {
+				alunos[indexAluno].aep2 = std::stof(conteudo);
+				conteudo = "";
+				controleColuna = 5;
+			} else if (coluna == 6 && controleColuna == 5) {
+				alunos[indexAluno].prova2 = std::stof(conteudo);
+				conteudo = "";
+				controleColuna = 6;
+			} else if (coluna == 7 && controleColuna == 6) {
+				alunos[indexAluno].sub = std::stof(conteudo);
+				conteudo = "";
+				controleColuna = 7;
+			} else if (coluna == 8 && controleColuna == 7) {
+				alunos[indexAluno].media = std::stof(conteudo);
+				conteudo = "";
+				controleColuna = 8;
+			} else {
+				alunos[indexAluno].status = conteudo;
 			}
-			indexAlunos++;
+			if (linha[i] == ';') {
+				coluna++;
+				continue;
+			}
+			conteudo.push_back(linha[i]);
 		}
-		arquivo.close();
-	//tentativa1	
-	for (int i = 0; i < 100; i++) {
-	std::cout << "Aluno n-" << i+1 << "\n";
-	std::cout << "Nome: " << alunos[i].nome << "\n";
-	std::cout << "Matricula: " << alunos[i].matricula << "\n";
-	std:: cout << "AEP1: " << alunos[i].aep1 << "\n";
-	}	
+		indexAluno++;
+	}
+
+	arquivo.close();
 	return true;
 }
-	
+
+bool realizaLeituraAprovados(){
+
+    realizaLeitura();
+    std::ifstream arquivo;
+	arquivo.open("database.csv");
+	if (!arquivo.is_open()) {
+		std::cout << "Houve um erro ao abrir o arquivo!" << std::endl << std::endl;
+		return false;
+	}
+        for(int i = 0; i <= 100; i++){
+        if(alunos[i].media >= 6){
+            std:: cout << "Aluno n-" << i << "\n";
+            std::cout << "Nome: " << alunos[i].nome << "\n";
+			std::cout << "Matricula: " << alunos[i].matricula <<"\n";
+			std:: cout << "Media: " << alunos[i].media << "\n";
+			std::cout << "Status: " << alunos[i].status << "\n";
+			std::cout << "--------------------------------------------\n";
+        }
+    }
+    arquivo.close();
+	return true;
+}
+
+bool realizaLeituraEmDP(){
+
+    realizaLeitura();
+    std::ifstream arquivo;
+	arquivo.open("database.csv");
+	if (!arquivo.is_open()) {
+		std::cout << "Houve um erro ao abrir o arquivo!" << std::endl << std::endl;
+		return false;
+	}
+        for(int i = 0; i <= 100; i++){
+        if(alunos[i].media <= 6){
+            std:: cout << "Aluno n-" << i << "\n";
+            std::cout << "Nome: " << alunos[i].nome << "\n";
+			std::cout << "Matricula: " << alunos[i].matricula <<"\n";
+			std:: cout << "Media: " << alunos[i].media << "\n";
+			std::cout << "Status: " << alunos[i].status << "\n";
+			std::cout << "--------------------------------------------\n";
+        }
+    }
+    arquivo.close();
+	return true;
+}
+
+bool realizaLeituraSubPrimeiro(){
+
+    realizaLeitura();
+    std::ifstream arquivo;
+	arquivo.open("database.csv");
+	if (!arquivo.is_open()) {
+		std::cout << "Houve um erro ao abrir o arquivo!" << std::endl << std::endl;
+		return false;
+	}
+        for(int i = 0; i <= 100; i++){
+        if((alunos[i].aep1 + alunos[i].prova1) < 6){
+            std:: cout << "Aluno n-" << i << "\n";
+            std::cout << "Nome: " << alunos[i].nome << "\n";
+			std::cout << "Matricula: " << alunos[i].matricula <<"\n";
+			std:: cout << "Primeira Aep: " << alunos[i].aep1 << "\n";
+			std::cout << "Primeira Prova: " << alunos[i].prova1 << "\n";
+			std::cout << "--------------------------------------------\n";
+        }
+    }
+    arquivo.close();
+	return true;
+}
+bool realizaLeituraSubSegundo(){
+    realizaLeitura();
+    std::ifstream arquivo;
+	arquivo.open("database.csv");
+	if (!arquivo.is_open()) {
+		std::cout << "Houve um erro ao abrir o arquivo!" << std::endl << std::endl;
+		return false;
+	}
+        for(int i = 0; i <= 100; i++){
+        if((alunos[i].aep2 + alunos[i].prova2) < 6){
+            std:: cout << "Aluno n-" << i << "\n";
+            std::cout << "Nome: " << alunos[i].nome << "\n";
+			std::cout << "Matricula: " << alunos[i].matricula <<"\n";
+			std:: cout << "Segunda Aep: " << alunos[i].aep2 << "\n";
+			std::cout << "Segunda Prova: " << alunos[i].prova2 << "\n";
+			std::cout << "--------------------------------------------\n";
+        }
+    }
+    arquivo.close();
+	return true;
+}
+
 
 
 

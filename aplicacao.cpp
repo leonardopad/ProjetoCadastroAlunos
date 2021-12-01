@@ -6,7 +6,7 @@ int main () {
 	char continuar = ' ';
 	Aluno aluno[100];
 	do {
-	   opcao = menu();	
+	   opcao = menu();
 	   switch (opcao) {
 	   		case 'C':
 	   			for(int i = 0; i <= QTSALUNOS; i++){
@@ -19,21 +19,26 @@ int main () {
 						break;
 					}else{
 						std:: cout << "Digite uma opcao valida!";
-					}	
-				   } 
+					}
+				   }
 	   		break;
 	   		case 'F':
 	   			std::cout << "Finalizando aplicacao...\n";
 	   		break;
 	   		case 'L':
-	   			realizaLeitura();
+	   			realizaLeituraAprovados();
 	   			break;
-//	   		case 'A':
-//			   criaArquivoAprovados(Aluno aluno[i]);
-//			   break;	
-	   		// demais funcoes deverão ser chamadas aqui
+	   			case 'D':
+	   			realizaLeituraEmDP();
+	   			break;
+	   			case 'S':
+	   			realizaLeituraSubPrimeiro();
+	   			break;
+	   			case 'J':
+	   			realizaLeituraSubSegundo();
+	   			break;
 	   		default:
 	   			std::cout << "Opcao invalida\n Tente Novamente!\n";
 	   }
-	} while(opcao != 'F');	
+	} while(opcao != 'F');
 }
